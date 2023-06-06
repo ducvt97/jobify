@@ -1,0 +1,27 @@
+import { DashboardPage, RegisterPage, LandingPage } from './pages'
+
+import {
+  createBrowserRouter,
+  // Link,
+  // Route,
+  RouterProvider,
+  // Routes,
+} from 'react-router-dom'
+import ErrorPage from './pages/error'
+
+const router = createBrowserRouter([
+  { path: '/', Component: DashboardPage },
+  { path: '/register', Component: RegisterPage },
+  { path: '/landing', Component: LandingPage },
+  { path: '*', Component: ErrorPage },
+])
+
+function App() {
+  return (
+    <div className="App">
+      <RouterProvider router={router}></RouterProvider>
+    </div>
+  )
+}
+
+export default App
