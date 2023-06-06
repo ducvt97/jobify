@@ -4,26 +4,37 @@ import Wrapper from '../assets/wrappers/RegisterPage'
 import Logo from '../components/logo'
 import FormRow from '../components/form_row'
 import Alert from '../components/alert'
+import { useDispatch, useSelector } from 'react-redux'
+import { clearAlert, displayAlert } from '../store/commonReducer'
 
 const initialState = {
   name: '',
   email: '',
   password: '',
   isMember: true,
-  showAlert: false,
 }
 
 const Register = () => {
   const [values, setValues] = useState(initialState)
+  const commonState = useSelector(state => state.common);
+  const dispatch = useDispatch();
 
-  const handleChange = (e) => {}
+  const handleChange = (e) => {
+    setValues({...values, [e.target.name]: e.target.value});
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    const {name, email, password, isMember} = values;
+    if (!email || !password || (!isMember && !name)) {
+      dispatch(displayAlert({alertType: 'danger', alertText: 'Please provide all values.'}));
+    } else {
+      dispatch(clearAlert());
+    }
   }
 
   const toggleMember = () => {
-    setValues({ values, ...{ isMember: !values.isMember } })
+    setValues({ ...values, isMember: !values.isMember });
   }
 
   return (
@@ -31,7 +42,7 @@ const Register = () => {
       <form className="form" onSubmit={handleSubmit}>
         <Logo />
         <h3>Login</h3>
-        {values.showAlert && <Alert text="Error" />}
+        {commonState.showAlert && <Alert text={commonState.alertText} />}
         {!values.isMember && (
           <FormRow
             type="text"
@@ -44,7 +55,7 @@ const Register = () => {
         <FormRow
           type="email"
           name="email"
-          labelText="Name"
+          labelText="Email"
           value={values.email}
           handleChange={handleChange}
         />
