@@ -1,15 +1,23 @@
 import express from 'express'
+import 'express-async-errors'
 import env from 'dotenv'
 
 import notFoundMiddleware from './not-found.js'
 import errorHandlerMiddleware from './error-handler.js'
 import connectDB from './db/connect.js'
+import authRouter from './routes/authRoutes.js'
+import jobRouter from './routes/jobRoutes.js'
 
 const app = express()
 env.config()
+
 const port = process.env.PORT || 7000
 
+app.use(express.json()) // make json data available in controllers
+
 app.get('/', (req, res) => res.send('Welcome'))
+app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/jobs', jobRouter)
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
 
