@@ -1,6 +1,7 @@
 import express from 'express'
 import 'express-async-errors'
 import env from 'dotenv'
+import cors from 'cors'
 
 import notFoundMiddleware from './not-found.js'
 import errorHandlerMiddleware from './error-handler.js'
@@ -13,6 +14,7 @@ env.config()
 
 const port = process.env.PORT || 7000
 
+app.use(cors())
 app.use(express.json()) // make json data available in controllers
 
 app.get('/', (req, res) => res.send('Welcome'))

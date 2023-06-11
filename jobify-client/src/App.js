@@ -8,6 +8,7 @@ import {
   // Routes,
 } from 'react-router-dom'
 import ErrorPage from './pages/error'
+import axios from 'axios'
 
 const router = createBrowserRouter([
   { path: '/', Component: DashboardPage },
@@ -15,6 +16,8 @@ const router = createBrowserRouter([
   { path: '/landing', Component: LandingPage },
   { path: '*', Component: ErrorPage },
 ])
+
+axios.defaults.baseURL = 'http://localhost:5000/api/v1'
 
 function App() {
   return (
