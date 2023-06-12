@@ -8,9 +8,14 @@ import errorHandlerMiddleware from './error-handler.js'
 import connectDB from './db/connect.js'
 import authRouter from './routes/authRoutes.js'
 import jobRouter from './routes/jobRoutes.js'
+import morgan from 'morgan'
 
 const app = express()
 env.config()
+
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('combined'))
+}
 
 const port = process.env.PORT || 7000
 
