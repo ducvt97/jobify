@@ -24,7 +24,6 @@ const Register = () => {
 
   useEffect(() => {
     if (user) {
-      console.log(user)
       setTimeout(() => navigate('/'), 1500)
     }
   }, [user, navigate])
