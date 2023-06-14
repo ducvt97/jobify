@@ -1,46 +1,45 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
-const user = localStorage.getItem('user')
-const token = localStorage.getItem('token')
-const location = localStorage.getItem('location')
-console.log(user)
+const user = localStorage.getItem("user");
+const token = localStorage.getItem("token");
+const location = localStorage.getItem("location");
 const initState = {
   user: user ? JSON.parse(user) : null,
   token: token || null,
-  userLocation: location || '',
-}
+  userLocation: location || "",
+};
 
 const addUserToLocalStorage = ({ user, token, userLocation }) => {
-  console.log(user, token, userLocation)
-  localStorage.setItem('user', JSON.stringify(user))
-  localStorage.setItem('token', token)
-  localStorage.setItem('location', userLocation)
-}
+  console.log(user, token, userLocation);
+  localStorage.setItem("user", JSON.stringify(user));
+  localStorage.setItem("token", token);
+  localStorage.setItem("location", userLocation);
+};
 const removeUserFromLocalStorage = () => {
-  localStorage.removeItem('user')
-  localStorage.removeItem('token')
-  localStorage.removeItem('location')
-}
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+  localStorage.removeItem("location");
+};
 
 const userSlice = createSlice({
   initialState: initState,
-  name: 'User',
+  name: "User",
   reducers: {
     login: (state, action) => {
-      state.user = action.payload.user
-      state.token = action.payload.token
-      state.userLocation = action.payload.userLocation
-      addUserToLocalStorage(state)
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.userLocation = action.payload.userLocation;
+      addUserToLocalStorage(state);
     },
     logout: (state, _) => {
-      state.user = null
-      state.token = null
-      state.userLocation = ''
-      removeUserFromLocalStorage()
+      state.user = null;
+      state.token = null;
+      state.userLocation = "";
+      removeUserFromLocalStorage();
     },
     updateUser: (state, action) => {},
   },
-})
+});
 
-export const { login, logout, updateUser } = userSlice.actions
-export default userSlice.reducer
+export const { login, logout, updateUser } = userSlice.actions;
+export default userSlice.reducer;
