@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const FormRow = ({ type, name, value, handleChange, labelText }) => {
   return (
@@ -7,15 +7,15 @@ const FormRow = ({ type, name, value, handleChange, labelText }) => {
         {labelText || name}
       </label>
       <input
-        type={type}
+        type={type || "text"}
         className="form-input"
-        id={name}
-        name={name}
+        id={name || "id"}
+        name={name || "name"}
         value={value}
         onChange={handleChange}
       />
     </div>
-  )
-}
+  );
+};
 
-export default FormRow
+export default FormRow;

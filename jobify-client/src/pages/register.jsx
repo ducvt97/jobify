@@ -1,102 +1,93 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import UserService from '../services/user'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import UserService from "../services/user";
+import { useNavigate } from "react-router-dom";
 
-import Wrapper from '../assets/wrappers/RegisterPage'
-import { Alert, FormRow, Logo } from '../components'
-import { clearAlert, displayAlert, setLoading } from '../store/commonReducer'
-import { login } from '../store/userReducer'
+import Wrapper from "../assets/wrappers/RegisterPage";
+import { Alert, FormRow, Logo } from "../components";
+import { clearAlert, displayAlert, setLoading } from "../store/commonReducer";
+import { login } from "../store/userReducer";
 
 const initialState = {
-  name: '',
-  email: '',
-  password: '',
+  name: "",
+  email: "",
+  password: "",
   isMember: true,
-}
+};
 
 const Register = () => {
-  const [values, setValues] = useState(initialState)
-  const commonState = useSelector((state) => state.common)
-  const user = useSelector((state) => state.user.user)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [values, setValues] = useState(initialState);
+  const commonState = useSelector((state) => state.common);
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      setTimeout(() => navigate('/'), 1500)
+      setTimeout(() => {
+        dispatch(clearAlert());
+        navigate("/");
+      }, 1500);
     }
-  }, [user, navigate])
+  }, [user, navigate, dispatch]);
 
   const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value })
-  }
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const { name, email, password, isMember } = values
-    dispatch(setLoading(true))
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { name, email, password, isMember } = values;
+    dispatch(setLoading(true));
     if (!email || !password || (!isMember && !name)) {
       dispatch(
         displayAlert({
-          alertType: 'danger',
-          alertText: 'Please provide all values.',
-        }),
-      )
+          alertType: "danger",
+          alertText: "Please provide all values.",
+        })
+      );
     } else {
-      dispatch(clearAlert())
+      dispatch(clearAlert());
     }
 
-    if (values.isMember) {
-      UserService.login({ email, password })
-        .then((res) => {
-          const { user, token, userLocation } = res.data
-          dispatch(
-            displayAlert({
-              alertType: 'success',
-              alertText: 'Login successfully. Redirecting...',
-            }),
-          )
-          dispatch(setLoading(false))
-          dispatch(login({ user, token, userLocation }))
+    try {
+      if (values.isMember) {
+        const res = await UserService.login({ email, password });
+        const { user, token, userLocation } = res.data;
+
+        dispatch(
+          displayAlert({
+            alertType: "success",
+            alertText: "Login successfully. Redirecting...",
+          })
+        );
+        dispatch(login({ user, token, userLocation }));
+      } else {
+        const res = await UserService.register({ name, email, password });
+        const { user, token, userLocation } = res.data;
+
+        dispatch(
+          displayAlert({
+            alertType: "success",
+            alertText: "Register successfully. Redirecting...",
+          })
+        );
+        dispatch(login({ user, token, userLocation }));
+      }
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(
+        displayAlert({
+          alertType: "danger",
+          alertText: error.response.data.msg,
         })
-        .catch((err) => {
-          dispatch(
-            displayAlert({
-              alertType: 'danger',
-              alertText: err.response.data.msg,
-            }),
-          )
-          dispatch(setLoading(false))
-        })
-    } else {
-      UserService.register({ name, email, password })
-        .then((res) => {
-          const { user, token, userLocation } = res.data
-          dispatch(
-            displayAlert({
-              alertType: 'success',
-              alertText: 'Register successfully. Redirecting...',
-            }),
-          )
-          dispatch(setLoading(false))
-          dispatch(login({ user, token, userLocation }))
-        })
-        .catch((err) => {
-          dispatch(
-            displayAlert({
-              alertType: 'danger',
-              alertText: err.response.data.msg,
-            }),
-          )
-          dispatch(setLoading(false))
-        })
+      );
     }
-  }
+  };
 
   const toggleMember = () => {
-    setValues({ ...values, isMember: !values.isMember })
-  }
+    setValues({ ...values, isMember: !values.isMember });
+  };
 
   return (
     <Wrapper className="full-page">
@@ -130,22 +121,22 @@ const Register = () => {
           handleChange={handleChange}
         />
         <button type="submit" className="btn btn-block">
-          {values.isMember ? 'Submit' : 'Register'}
+          {values.isMember ? "Submit" : "Register"}
         </button>
         <p>
-          {values.isMember ? 'Not a member yet?' : 'Already a member?'}
+          {values.isMember ? "Not a member yet?" : "Already a member?"}
           <button
             type="button"
             className="member-btn"
             onClick={toggleMember}
             disabled={commonState.isLoading}
           >
-            {values.isMember ? 'Register' : 'Login'}
+            {values.isMember ? "Register" : "Login"}
           </button>
         </p>
       </form>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

@@ -10,7 +10,6 @@ const initState = {
 };
 
 const addUserToLocalStorage = ({ user, token, userLocation }) => {
-  console.log(user, token, userLocation);
   localStorage.setItem("user", JSON.stringify(user));
   localStorage.setItem("token", token);
   localStorage.setItem("location", userLocation);
@@ -37,7 +36,12 @@ const userSlice = createSlice({
       state.userLocation = "";
       removeUserFromLocalStorage();
     },
-    updateUser: (state, action) => {},
+    updateUser: (state, action) => {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.userLocation = action.payload.userLocation;
+      addUserToLocalStorage(state);
+    },
   },
 });
 
