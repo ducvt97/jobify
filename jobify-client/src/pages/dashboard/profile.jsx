@@ -27,7 +27,7 @@ const ProfilePage = () => {
     return () => {
       dispatch(clearAlert());
     };
-  });
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -45,6 +45,8 @@ const ProfilePage = () => {
           alertText: "Please provide all values",
         })
       );
+      dispatch(setLoading(false));
+      return;
     }
     try {
       const res = await UserService.update(
@@ -71,8 +73,9 @@ const ProfilePage = () => {
           alertText: error.response.data.msg,
         })
       );
+    } finally {
+      dispatch(setLoading(false));
     }
-    dispatch(setLoading(false));
   };
 
   return (

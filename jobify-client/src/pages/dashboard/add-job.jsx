@@ -34,7 +34,7 @@ const AddJobPage = () => {
     return () => {
       dispatch(clearAlert());
     };
-  });
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -68,16 +68,18 @@ const AddJobPage = () => {
 
     const { position, company, location, type, status } = values;
     if (!position || !company || !location) {
-      console.log("error");
       dispatch(
         displayAlert({
           alertType: "danger",
-          alertText: "Please provide all values",
+          alertText: "Please provide all values.",
         })
       );
       dispatch(setLoading(false));
       return;
+    } else {
+      dispatch(clearAlert());
     }
+
     try {
       const res = await JobService.createJob(
         {
@@ -99,6 +101,8 @@ const AddJobPage = () => {
           alertText: "Job Created Successfully!",
         })
       );
+      clearValues();
+      setTimeout(() => dispatch(clearAlert()), 1500);
     } catch (error) {
       dispatch(
         displayAlert({
@@ -106,8 +110,9 @@ const AddJobPage = () => {
           alertText: error.response.data.msg,
         })
       );
+    } finally {
+      dispatch(setLoading(false));
     }
-    dispatch(setLoading(false));
   };
 
   return (

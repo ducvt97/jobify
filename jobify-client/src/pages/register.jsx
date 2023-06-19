@@ -46,6 +46,8 @@ const Register = () => {
           alertText: "Please provide all values.",
         })
       );
+      dispatch(setLoading(false));
+      return;
     } else {
       dispatch(clearAlert());
     }
@@ -74,7 +76,6 @@ const Register = () => {
         );
         dispatch(login({ user, token, userLocation }));
       }
-      dispatch(setLoading(false));
     } catch (error) {
       dispatch(
         displayAlert({
@@ -82,6 +83,8 @@ const Register = () => {
           alertText: error.response.data.msg,
         })
       );
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
