@@ -1,12 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { IoBarChartSharp } from "react-icons/io5";
 import { MdQueryStats } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
-
-import { toggleSidebar } from "../store/commonReducer";
 
 const links = [
   { id: 1, path: "/", text: "Stats", icon: <IoBarChartSharp /> },
@@ -15,9 +12,7 @@ const links = [
   { id: 4, path: "profile", text: "profile", icon: <ImProfile /> },
 ];
 
-const NavLinks = () => {
-  const dispatch = useDispatch();
-
+const NavLinks = ({ linkClick }) => {
   return (
     <div className="nav-links">
       {links.map((link) => {
@@ -29,7 +24,7 @@ const NavLinks = () => {
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
-            onClick={() => dispatch(toggleSidebar())}
+            onClick={linkClick}
           >
             <span className="icon">{icon}</span>
             {text}

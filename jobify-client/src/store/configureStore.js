@@ -3,12 +3,14 @@ import {
 } from "@reduxjs/toolkit";
 import commonReducer from "./commonReducer";
 import userReducer from "./userReducer";
+import jobReducer from "./jobReducer";
 
 
 const store = configureStore({
     reducer: {
         common: commonReducer,
-        user: userReducer
+        user: userReducer,
+        job: jobReducer,
     }
 });
 

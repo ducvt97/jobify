@@ -25,7 +25,7 @@ const SmallSidebar = () => {
           <header>
             <Logo />
           </header>
-          <NavLinks />
+          <NavLinks linkClick={() => dispatch(toggleSidebar())} />
         </div>
       </div>
     </Wrapper>
