@@ -18,7 +18,7 @@ const JobsContainer = ({ jobs, isLoading }) => {
           </h5>
           <div className="jobs">
             {jobs.map((val) => (
-              <JobCard company={val.company} key={val._id} />
+              <JobCard key={val._id} jobDetail={val} />
             ))}
           </div>
         </>

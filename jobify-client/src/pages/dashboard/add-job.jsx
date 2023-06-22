@@ -41,7 +41,7 @@ const AddJobPage = () => {
   };
 
   const clearValues = () => {
-    if (!isEditing) {
+    if (isEditing) {
       setValues({
         jobId: jobId,
         position: position,

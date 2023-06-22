@@ -33,4 +33,12 @@ export default class JobService {
       }
     );
   };
+
+  static deleteJob = ({ id, token }) => {
+    return axios.delete(`${userUrl}/:${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
 }
