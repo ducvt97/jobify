@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { StrictMode, useEffect, useState } from "react";
 
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +33,7 @@ const AddJobPage = () => {
   useEffect(() => {
     return () => {
       dispatch(clearAlert());
+      dispatch(clearEditingJob());
     };
   }, [dispatch]);
 
@@ -66,7 +67,7 @@ const AddJobPage = () => {
     e.preventDefault();
     dispatch(setLoading(true));
 
-    const { position, company, location, type, status } = values;
+    const { jobId, position, company, location, type, status } = values;
     if (!position || !company || !location) {
       dispatch(
         displayAlert({
@@ -81,29 +82,36 @@ const AddJobPage = () => {
     }
 
     try {
-      const res = await JobService.createJob(
-        {
-          position,
-          company,
-          location,
-          type,
-          status,
-        },
-        user.userId,
-        currentToken
-      );
-      console.log(res);
-      // const { user, token, userLocation } = res.data;
-      dispatch(clearEditingJob());
+      let alertText;
+
+      if (!isEditing) {
+        await JobService.createJob(
+          { position, company, location, type, status },
+          user.userId,
+          currentToken
+        );
+
+        alertText = "Job Created Successfully!";
+        clearValues();
+      } else {
+        await JobService.updateJob(
+          { _id: jobId, position, company, jobType: type, status },
+          currentToken
+        );
+
+        alertText = "Job Updated Successfully!";
+      }
+
       dispatch(
         displayAlert({
           alertType: "success",
-          alertText: "Job Created Successfully!",
+          alertText: alertText,
         })
       );
-      clearValues();
-      setTimeout(() => dispatch(clearAlert()), 1500);
+
+      setTimeout(() => dispatch(clearAlert()), 2000);
     } catch (error) {
+      console.log(error);
       dispatch(
         displayAlert({
           alertType: "danger",
@@ -116,67 +124,69 @@ const AddJobPage = () => {
   };
 
   return (
-    <Wrapper>
-      <form action="" onSubmit={handleSubmit}>
-        <h3>{isEditing ? "Edit Job" : "Add Job"}</h3>
-        {commonState.showAlert && (
-          <Alert text={commonState.alertText} type={commonState.alertType} />
-        )}
-        <div className="form-center">
-          <FormRow
-            value={values.position}
-            type="text"
-            name="position"
-            labelText="Position"
-            handleChange={handleChange}
-          />
-          <FormRow
-            value={values.company}
-            type="text"
-            name="company"
-            labelText="Company"
-            handleChange={handleChange}
-          />
-          <FormRow
-            value={values.location}
-            type="text"
-            name="location"
-            labelText="Job Location"
-            handleChange={handleChange}
-          />
-          <FormRowSelect
-            value={values.type}
-            name="type"
-            labelText="Job Type"
-            options={typeOptions}
-            handleChange={handleChange}
-          />
-          <FormRowSelect
-            value={values.status}
-            name="status"
-            labelText="Job Status"
-            options={statusOptions}
-            handleChange={handleChange}
-          />
-          <div className="btn-container">
-            <button
-              type="submit"
-              className="btn btn-block submit-btn"
-              disabled={commonState.isLoading}
-            >
-              {commonState.isLoading ? "Please wait..." : "Submit"}
-            </button>
-            <button
-              type="button"
-              className="btn btn-block clear-btn"
-              onClick={clearValues}
-            >
-              Clear
-            </button>
+    <StrictMode>
+      <Wrapper>
+        <form action="" onSubmit={handleSubmit}>
+          <h3>{isEditing ? "Edit Job" : "Add Job"}</h3>
+          {commonState.showAlert && (
+            <Alert text={commonState.alertText} type={commonState.alertType} />
+          )}
+          <div className="form-center">
+            <FormRow
+              value={values.position}
+              type="text"
+              name="position"
+              labelText="Position"
+              handleChange={handleChange}
+            />
+            <FormRow
+              value={values.company}
+              type="text"
+              name="company"
+              labelText="Company"
+              handleChange={handleChange}
+            />
+            <FormRow
+              value={values.location}
+              type="text"
+              name="location"
+              labelText="Job Location"
+              handleChange={handleChange}
+            />
+            <FormRowSelect
+              value={values.type}
+              name="type"
+              labelText="Job Type"
+              options={typeOptions}
+              handleChange={handleChange}
+            />
+            <FormRowSelect
+              value={values.status}
+              name="status"
+              labelText="Job Status"
+              options={statusOptions}
+              handleChange={handleChange}
+            />
+            <div className="btn-container">
+              <button
+                type="submit"
+                className="btn btn-block submit-btn"
+                disabled={commonState.isLoading}
+              >
+                {commonState.isLoading ? "Please wait..." : "Submit"}
+              </button>
+              <button
+                type="button"
+                className="btn btn-block clear-btn"
+                onClick={clearValues}
+              >
+                Clear
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </Wrapper>
+        </form>
+      </Wrapper>
+    </StrictMode>
   );
 };
 

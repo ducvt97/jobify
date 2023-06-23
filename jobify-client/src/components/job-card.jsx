@@ -51,7 +51,7 @@ const JobCard = ({ jobDetail, deleteJob }) => {
             <button
               type="button"
               className="btn delete-btn"
-              onClick={deleteJob}
+              onClick={() => deleteJob(_id)}
             >
               Delete
             </button>

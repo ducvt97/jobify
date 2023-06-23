@@ -35,10 +35,31 @@ export default class JobService {
   };
 
   static deleteJob = ({ id, token }) => {
-    return axios.delete(`${userUrl}/:${id}`, {
+    return axios.delete(`${userUrl}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+  };
+
+  static updateJob = (
+    { _id, position, company, location, jobType, status },
+    token
+  ) => {
+    return axios.patch(
+      `${userUrl}/${_id}`,
+      {
+        position,
+        company,
+        location,
+        type: jobType,
+        status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   };
 }
