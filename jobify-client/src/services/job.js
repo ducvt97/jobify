@@ -62,4 +62,12 @@ export default class JobService {
       }
     );
   };
+
+  static showStats = (token) => {
+    return axios.get(`${userUrl}/stats`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
 }

@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors/errors.js";
 import Job from "../models/job.js";
 import checkPermission from "../uitls/permission.js";
+import mongoose, { model } from "mongoose";
 
 const createJob = async (req, res) => {
   const { position, company } = req.body;
@@ -60,8 +61,25 @@ const deleteJob = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Deleted." });
 };
 
-const showStats = (req, res) => {
-  res.send("Show Stats");
+const showStats = async (req, res) => {
+  let stats = await Job.aggregate([
+    { $group: { _id: "$status", count: { $sum: 1 } } },
+  ]);
+  stats = stats.reduce((acc, cur) => {
+    const { _id: title, count } = cur;
+    acc[title] = count;
+    return acc;
+  }, {});
+
+  const resultStats = {
+    pending: stats.pending || 0,
+    interview: stats.interview || 0,
+    declined: stats.declined || 0,
+  };
+
+  const monthlyApplications = [];
+
+  res.status(StatusCodes.OK).json({ stats: resultStats, monthlyApplications });
 };
 
 export { createJob, getAllJobs, updateJob, deleteJob, showStats };
