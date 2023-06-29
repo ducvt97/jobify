@@ -2,7 +2,10 @@ import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors/errors.js";
 import Job from "../models/job.js";
 import checkPermission from "../uitls/permission.js";
-import mongoose, { model } from "mongoose";
+import moment from "moment/moment.js";
+
+const jobStatuses = ["interview", "declined", "pending"];
+const jobTypes = ["full-time", "part-time", "remote", "intern"];
 
 const createJob = async (req, res) => {
   const { position, company } = req.body;
@@ -19,7 +22,36 @@ const createJob = async (req, res) => {
 };
 
 const getAllJobs = async (req, res) => {
-  const jobs = await Job.find();
+  const { status, jobType, search, sort } = req.query;
+  const queryObj = {};
+
+  if (status && status !== "all") {
+    queryObj.status = status;
+  }
+
+  if (jobType && jobType !== "all") {
+    queryObj.type = jobType;
+  }
+
+  if (search) {
+    queryObj.position = { $regex: search };
+  }
+
+  let result = Job.find(queryObj);
+
+  switch (sort) {
+    case "latest":
+      result = result.sort("-createdAt");
+    case "oldest":
+      result = result.sort("createdAt");
+    case "a-z":
+      result = result.sort("position");
+    case "z-a":
+      result = result.sort("-position");
+  }
+
+  const jobs = await result;
+
   res.status(StatusCodes.OK).json({ jobs, total: jobs.length, numOfPages: 1 });
 };
 
@@ -77,7 +109,24 @@ const showStats = async (req, res) => {
     declined: stats.declined || 0,
   };
 
-  const monthlyApplications = [];
+  let monthlyApplications = await Job.aggregate([
+    {
+      $group: {
+        _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { "_id.year": -1, "_id.month": -1 } },
+    { $limit: 6 },
+  ]);
+  monthlyApplications = monthlyApplications.map((item) => {
+    const { year, month } = item._id;
+    const date = moment()
+      .month(month - 1)
+      .year(year)
+      .format("MMM y");
+    return { date, count: item.count };
+  });
 
   res.status(StatusCodes.OK).json({ stats: resultStats, monthlyApplications });
 };
