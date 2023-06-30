@@ -4,7 +4,7 @@ import Wrapper from "../assets/wrappers/JobsContainer";
 import Loading from "./loading";
 import JobCard from "./job-card";
 
-const JobsContainer = ({ jobs, isLoading, deleteJob }) => {
+const JobsContainer = ({ jobs, totalJobs, isLoading, deleteJob }) => {
   return isLoading ? (
     <Loading center={true} />
   ) : (
@@ -14,7 +14,8 @@ const JobsContainer = ({ jobs, isLoading, deleteJob }) => {
       ) : (
         <>
           <h5>
-            {jobs.length} job{jobs.length > 1 && "s"} found
+            {totalJobs || jobs.length} job
+            {(totalJobs > 1 || jobs.length > 1) && "s"} found
           </h5>
           <div className="jobs">
             {jobs.map((val) => (
