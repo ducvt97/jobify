@@ -111,7 +111,6 @@ const AddJobPage = () => {
 
       setTimeout(() => dispatch(clearAlert()), 2000);
     } catch (error) {
-      console.log(error);
       dispatch(
         displayAlert({
           alertType: "danger",

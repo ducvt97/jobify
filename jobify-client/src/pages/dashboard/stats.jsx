@@ -23,7 +23,6 @@ const StatsPage = () => {
           res.data;
         setStats({ stats, ...resStats });
         setMonthlyApplications(resMonthlyApplications);
-        console.log(resMonthlyApplications);
       } catch (error) {
         dispatch(
           displayAlert({

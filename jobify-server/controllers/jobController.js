@@ -4,9 +4,6 @@ import Job from "../models/job.js";
 import checkPermission from "../uitls/permission.js";
 import moment from "moment/moment.js";
 
-const jobStatuses = ["interview", "declined", "pending"];
-const jobTypes = ["full-time", "part-time", "remote", "intern"];
-
 const createJob = async (req, res) => {
   const { position, company } = req.body;
 
@@ -67,7 +64,7 @@ const getAllJobs = async (req, res) => {
   const totalJobs = await Job.countDocuments(queryObj);
   const numOfPages = Math.ceil(totalJobs / limit);
 
-  res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages });
+  res.status(StatusCodes.OK).json({ jobs, page, totalJobs, numOfPages });
 };
 
 const updateJob = async (req, res) => {
@@ -134,14 +131,16 @@ const showStats = async (req, res) => {
     { $sort: { "_id.year": -1, "_id.month": -1 } },
     { $limit: 6 },
   ]);
-  monthlyApplications = monthlyApplications.map((item) => {
-    const { year, month } = item._id;
-    const date = moment()
-      .month(month - 1)
-      .year(year)
-      .format("MMM y");
-    return { date, count: item.count };
-  });
+  monthlyApplications = monthlyApplications
+    .map((item) => {
+      const { year, month } = item._id;
+      const date = moment()
+        .month(month - 1)
+        .year(year)
+        .format("MMM y");
+      return { date, count: item.count };
+    })
+    .reverse();
 
   res.status(StatusCodes.OK).json({ stats: resultStats, monthlyApplications });
 };

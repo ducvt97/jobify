@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 
 import Wrapper from "../assets/wrappers/JobsContainer";
 import Loading from "./loading";
 import JobCard from "./job-card";
+import PagingContainer from "./paging-container";
+import { AllJobsContext } from "../contexts/all-jobs-context";
+import { useSelector } from "react-redux";
 
-const JobsContainer = ({ jobs, totalJobs, isLoading, deleteJob }) => {
+const JobsContainer = () => {
+  const isLoading = useSelector((state) => state.common.isLoading);
+  const {
+    fetchJobs,
+    state: { jobs, totalJobs },
+  } = useContext(AllJobsContext);
+
+  useEffect(() => {
+    fetchJobs({});
+  }, []);
+
   return isLoading ? (
     <Loading center={true} />
   ) : (
@@ -19,9 +32,10 @@ const JobsContainer = ({ jobs, totalJobs, isLoading, deleteJob }) => {
           </h5>
           <div className="jobs">
             {jobs.map((val) => (
-              <JobCard key={val._id} jobDetail={val} deleteJob={deleteJob} />
+              <JobCard key={val._id} jobDetail={val} />
             ))}
           </div>
+          <PagingContainer />
         </>
       )}
     </Wrapper>

@@ -3,9 +3,9 @@ import axios from "axios";
 const userUrl = "/jobs";
 
 export default class JobService {
-  static getAll = ({ search, status, jobType, sort, token }) => {
+  static getAll = ({ search, status, jobType, sort, page, token }) => {
     return axios.get(`${userUrl}`, {
-      params: { search, status, jobType, sort },
+      params: { search, status, jobType, sort, page },
       headers: {
         Authorization: `Bearer ${token}`,
       },

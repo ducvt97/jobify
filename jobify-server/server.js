@@ -3,6 +3,9 @@ import "express-async-errors";
 import env from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+import helmet from "helmet";
+import xss from "xss-clean";
+import mongoSanitize from "express-mongo-sanitize";
 
 import notFoundMiddleware from "./middlewares/not-found.js";
 import errorHandlerMiddleware from "./middlewares/error-handler.js";
@@ -22,6 +25,9 @@ const port = process.env.PORT || 7000;
 
 app.use(cors());
 app.use(express.json()); // make json data available in controllers
+app.use(helmet());
+app.use(xss());
+app.use(mongoSanitize());
 
 app.get("/", (req, res) => res.send("Welcome"));
 app.use("/api/v1/auth", authRouter);

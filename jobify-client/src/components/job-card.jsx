@@ -1,5 +1,5 @@
 import moment from "moment/moment";
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -7,12 +7,14 @@ import Wrapper from "../assets/wrappers/Job";
 import JobInfo from "./job-info";
 import { FaBriefcase, FaCalendarAlt, FaLocationArrow } from "react-icons/fa";
 import { setEditingJob } from "../store/jobReducer";
+import { AllJobsContext } from "../contexts/all-jobs-context";
 
-const JobCard = ({ jobDetail, deleteJob }) => {
+const JobCard = ({ jobDetail }) => {
   const { _id, company, position, status, type, location, createdAt } =
     jobDetail;
   const createdDate = moment(createdAt).format("MMM Do YY");
   const dispatch = useDispatch();
+  const { deleteJob } = useContext(AllJobsContext);
 
   const onClickEdit = () => {
     dispatch(

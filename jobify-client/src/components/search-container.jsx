@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 
 import Wrapper from "../assets/wrappers/SearchContainer";
 import Alert from "./alert";
 import FormRow from "./form-row";
 import FormRowSelect from "./form-row-select";
+import { AllJobsContext } from "../contexts/all-jobs-context";
 
 const defaultSearchFilters = {
   search: "",
@@ -17,19 +18,20 @@ const typeOptions = ["all", "full-time", "part-time", "remote", "intern"];
 const statusOptions = ["all", "interview", "declined", "pending"];
 const sortOptions = ["latest", "oldest", "a-z", "z-a"];
 
-const SearchContainer = ({ onSearch }) => {
-  const [filters, setFilters] = useState(defaultSearchFilters);
+const SearchContainer = () => {
   const commonState = useSelector((state) => state.common);
-  const token = useSelector((state) => state.user.token);
+
+  const {
+    fetchJobs,
+    state: { filters },
+  } = useContext(AllJobsContext);
 
   const handleChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-    onSearch({ ...filters, [e.target.name]: e.target.value, token });
+    fetchJobs({ ...filters, [e.target.name]: e.target.value });
   };
 
   const clearFilters = () => {
-    setFilters({ ...filters, ...defaultSearchFilters });
-    onSearch({ ...filters, ...defaultSearchFilters, token });
+    fetchJobs({ ...filters, ...defaultSearchFilters });
   };
 
   return (
