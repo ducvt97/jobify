@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import Wrapper from "../assets/wrappers/SearchContainer";
@@ -19,6 +19,7 @@ const statusOptions = ["all", "interview", "declined", "pending"];
 const sortOptions = ["latest", "oldest", "a-z", "z-a"];
 
 const SearchContainer = () => {
+  const [localSearch, setLocalSearch] = useState("");
   const commonState = useSelector((state) => state.common);
 
   const {
@@ -26,11 +27,25 @@ const SearchContainer = () => {
     state: { filters },
   } = useContext(AllJobsContext);
 
+  const debounce = () => {
+    let timeoutId;
+    return (e) => {
+      setLocalSearch(e.target.value);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fetchJobs({ ...filters, [e.target.name]: e.target.value });
+      }, 2000);
+    };
+  };
+
+  const debounceMemo = useMemo(() => debounce(), []);
+
   const handleChange = (e) => {
     fetchJobs({ ...filters, [e.target.name]: e.target.value });
   };
 
   const clearFilters = () => {
+    setLocalSearch("");
     fetchJobs({ ...filters, ...defaultSearchFilters });
   };
 
@@ -43,11 +58,11 @@ const SearchContainer = () => {
         )}
         <div className="form-center">
           <FormRow
-            value={filters.search}
+            value={localSearch}
             type="text"
             name="search"
             labelText="Search"
-            handleChange={handleChange}
+            handleChange={debounceMemo}
           />
           <FormRowSelect
             value={filters.jobType}

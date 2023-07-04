@@ -12,8 +12,8 @@ const apiLimiter = rateLimiter({
 
 const authRouter = express.Router();
 
-authRouter.route("/register").post(rateLimiter, register);
-authRouter.route("/login").post(rateLimiter, login);
+authRouter.route("/register").post(apiLimiter, register);
+authRouter.route("/login").post(apiLimiter, login);
 authRouter.route("/updateUser").patch(authUserMiddleware, updateUser);
 
 export default authRouter;
