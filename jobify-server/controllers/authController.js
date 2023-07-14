@@ -3,6 +3,16 @@ import { StatusCodes } from "http-status-codes";
 import User from "../models/user.js";
 import { BadRequestError, UnAuthorizedError } from "../errors/errors.js";
 
+const tokenExpire = 1000 * 60 * 60 * 24;
+
+const attachCookieToken = ({ res, token }) => {
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    expires: new Date(Date.now() + tokenExpire),
+  });
+};
+
 const register = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -17,6 +27,9 @@ const register = async (req, res) => {
 
   const user = await User.create({ name, email, password });
   const token = user.createJWT();
+
+  attachCookieToken({ res, token });
+
   res.status(StatusCodes.CREATED).json(returnUserData(user, token));
 };
 
@@ -37,6 +50,9 @@ const login = async (req, res) => {
   }
 
   const token = user.createJWT();
+
+  attachCookieToken({ res, token });
+
   res.status(StatusCodes.OK).json(returnUserData(user, token));
 };
 

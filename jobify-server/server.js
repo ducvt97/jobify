@@ -13,6 +13,7 @@ import connectDB from "./db/connect.js";
 import authRouter from "./routes/authRoutes.js";
 import jobRouter from "./routes/jobRoutes.js";
 import authUserMiddleware from "./middlewares/auth-user.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 env.config();
@@ -23,7 +24,8 @@ if (process.env.NODE_ENV !== "production") {
 
 const port = process.env.PORT || 7000;
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cookieParser());
 app.use(express.json()); // make json data available in controllers
 app.use(helmet());
 app.use(xss());
