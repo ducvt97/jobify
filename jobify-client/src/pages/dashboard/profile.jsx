@@ -13,7 +13,6 @@ import { updateUser } from "../../store/userReducer";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user.user);
-  const currentToken = useSelector((state) => state.user.token);
   const commonState = useSelector((state) => state.common);
   const [values, setValues] = useState({
     name: user.name,
@@ -55,11 +54,10 @@ const ProfilePage = () => {
           lastName,
           email,
           location,
-        },
-        currentToken
+        }
       );
-      const { user, token, userLocation } = res.data;
-      dispatch(updateUser({ user, token, userLocation }));
+      const { user, userLocation } = res.data;
+      dispatch(updateUser({ user, userLocation }));
       dispatch(
         displayAlert({
           alertType: "success",

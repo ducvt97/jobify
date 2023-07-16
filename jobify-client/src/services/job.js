@@ -3,28 +3,21 @@ import axios from "axios";
 const userUrl = "/jobs";
 
 export default class JobService {
-  static getAll = ({ search, status, jobType, sort, page, token }) => {
+  static getAll = ({ search, status, jobType, sort, page }) => {
     return axios.get(`${userUrl}`, {
-      params: { search, status, jobType, sort, page },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      params: { search, status, jobType, sort, page }
     });
   };
 
-  static search = ({ search, status, jobType, sort, token }) => {
+  static search = ({ search, status, jobType, sort }) => {
     return axios.get(`${userUrl}`, {
-      params: { search, status, jobType, sort },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      params: { search, status, jobType, sort }
     });
   };
 
   static createJob = (
     { position, company, location, jobType, status },
     userId,
-    token
   ) => {
     return axios.post(
       `${userUrl}/`,
@@ -36,25 +29,15 @@ export default class JobService {
         status,
         createdBy: userId,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
     );
   };
 
-  static deleteJob = ({ id, token }) => {
-    return axios.delete(`${userUrl}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  static deleteJob = ({ id }) => {
+    return axios.delete(`${userUrl}/${id}`);
   };
 
   static updateJob = (
-    { _id, position, company, location, jobType, status },
-    token
+    { _id, position, company, location, jobType, status }
   ) => {
     return axios.patch(
       `${userUrl}/${_id}`,
@@ -65,19 +48,10 @@ export default class JobService {
         type: jobType,
         status,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
     );
   };
 
-  static showStats = (token) => {
-    return axios.get(`${userUrl}/stats`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  static showStats = () => {
+    return axios.get(`${userUrl}/stats`);
   };
 }

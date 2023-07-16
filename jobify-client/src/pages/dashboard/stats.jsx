@@ -10,15 +10,14 @@ const defaultStats = { pending: 0, interview: 0, declined: 0 };
 const StatsPage = () => {
   const [stats, setStats] = useState(defaultStats);
   const [monthlyApplications, setMonthlyApplications] = useState([]);
-  const token = useSelector((state) => state.user.token);
-  const isLoading = useSelector((state) => state.common.isloading);
+  const isLoading = useSelector((state) => state.common.isLoading);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(setLoading(true));
     const fetchStats = async () => {
       try {
-        const res = await JobService.showStats(token);
+        const res = await JobService.showStats();
         const { stats: resStats, monthlyApplications: resMonthlyApplications } =
           res.data;
         setStats({ stats, ...resStats });

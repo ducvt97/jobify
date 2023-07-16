@@ -55,7 +55,7 @@ const Register = () => {
     try {
       if (values.isMember) {
         const res = await UserService.login({ email, password });
-        const { user, token, userLocation } = res.data;
+        const { user, userLocation } = res.data;
 
         dispatch(
           displayAlert({
@@ -63,10 +63,10 @@ const Register = () => {
             alertText: "Login successfully. Redirecting...",
           })
         );
-        dispatch(login({ user, token, userLocation }));
+        dispatch(login({ user, userLocation }));
       } else {
         const res = await UserService.register({ name, email, password });
-        const { user, token, userLocation } = res.data;
+        const { user, userLocation } = res.data;
 
         dispatch(
           displayAlert({
@@ -74,7 +74,7 @@ const Register = () => {
             alertText: "Register successfully. Redirecting...",
           })
         );
-        dispatch(login({ user, token, userLocation }));
+        dispatch(login({ user, userLocation }));
       }
     } catch (error) {
       dispatch(

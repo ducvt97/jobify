@@ -1,24 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const user = localStorage.getItem("user");
-const token = localStorage.getItem("token");
-const location = localStorage.getItem("location");
 const initState = {
-  user: user ? JSON.parse(user) : null,
-  token: token || null,
-  userLocation: location || "",
+  user: null,
+  userLocation: "",
 };
 
-const addUserToLocalStorage = ({ user, token, userLocation }) => {
-  localStorage.setItem("user", JSON.stringify(user));
-  localStorage.setItem("token", token);
-  localStorage.setItem("location", userLocation);
-};
-const removeUserFromLocalStorage = () => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("token");
-  localStorage.removeItem("location");
-};
+// const addUserToLocalStorage = ({ user, token, userLocation }) => {
+//   localStorage.setItem("user", JSON.stringify(user));
+//   localStorage.setItem("token", token);
+//   localStorage.setItem("location", userLocation);
+// };
+// const removeUserFromLocalStorage = () => {
+//   localStorage.removeItem("user");
+//   localStorage.removeItem("token");
+//   localStorage.removeItem("location");
+// };
 
 const userSlice = createSlice({
   initialState: initState,
@@ -26,21 +22,18 @@ const userSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.user = action.payload.user;
-      state.token = action.payload.token;
       state.userLocation = action.payload.userLocation;
-      addUserToLocalStorage(state);
+      // addUserToLocalStorage(state);
     },
     logout: (state, _) => {
       state.user = null;
-      state.token = null;
       state.userLocation = "";
-      removeUserFromLocalStorage();
+      // removeUserFromLocalStorage();
     },
     updateUser: (state, action) => {
       state.user = action.payload.user;
-      state.token = action.payload.token;
       state.userLocation = action.payload.userLocation;
-      addUserToLocalStorage(state);
+      // addUserToLocalStorage(state);
     },
   },
 });

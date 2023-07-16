@@ -1,17 +1,21 @@
 import jwt from "jsonwebtoken";
 
-import { UnAuthorizedError } from "../errors/errors.js";
+import {
+  UnAuthorizedError
+} from "../errors/errors.js";
 
 const authUserMiddleware = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer")) {
+  const token = req.cookies.token;
+
+  if (!token) {
     throw new UnAuthorizedError("Authentication Invalid");
   }
-  const token = authHeader.split(" ")[1];
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { userId: payload.userId };
+    req.user = {
+      userId: payload.userId
+    };
     next();
   } catch (error) {
     throw new UnAuthorizedError("Authentication Invalid");

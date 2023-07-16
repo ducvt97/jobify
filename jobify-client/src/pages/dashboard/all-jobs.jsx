@@ -10,13 +10,12 @@ import JobService from "../../services/job";
 import { AllJobsProvider } from "../../contexts/all-jobs-context";
 
 const AllJobsPage = () => {
-  const token = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
 
   const deleteJob = async (jobId) => {
     dispatch(setLoading(true));
     try {
-      await JobService.deleteJob({ id: jobId, token });
+      await JobService.deleteJob({ id: jobId });
     } catch (error) {
       dispatch(
         displayAlert({

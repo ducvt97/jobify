@@ -51,7 +51,6 @@ const AllJobsReducer = (prevState, action) => {
 
 const AllJobsProvider = (props) => {
   const [state, dispatch] = useReducer(AllJobsReducer, initialState);
-  const token = useSelector((state) => state.user.token);
   const dispatchStore = useDispatch();
 
   const fetchJobs = async ({ search, status, jobType, sort, page }) => {
@@ -63,7 +62,6 @@ const AllJobsProvider = (props) => {
         jobType,
         sort,
         page,
-        token,
       });
       const { jobs, page: curPage, totalJobs, numOfPages } = res.data;
 
@@ -91,7 +89,7 @@ const AllJobsProvider = (props) => {
   const deleteJob = async (jobId) => {
     try {
       dispatchStore(setLoading(true));
-      await JobService.deleteJob({ id: jobId, token });
+      await JobService.deleteJob({ id: jobId });
       fetchJobs({ ...state.filters, page: state.page });
     } catch (error) {
       dispatchStore(

@@ -16,7 +16,6 @@ const statusOptions = ["interview", "declined", "pending"];
 
 const AddJobPage = () => {
   const user = useSelector((state) => state.user.user);
-  const currentToken = useSelector((state) => state.user.token);
   const commonState = useSelector((state) => state.common);
   const { isEditing, jobId, position, company, jobLocation, jobType, status } =
     useSelector((state) => state.job);
@@ -87,17 +86,19 @@ const AddJobPage = () => {
       if (!isEditing) {
         await JobService.createJob(
           { position, company, location, type, status },
-          user.userId,
-          currentToken
+          user.userId
         );
 
         alertText = "Job Created Successfully!";
         clearValues();
       } else {
-        await JobService.updateJob(
-          { _id: jobId, position, company, jobType: type, status },
-          currentToken
-        );
+        await JobService.updateJob({
+          _id: jobId,
+          position,
+          company,
+          jobType: type,
+          status,
+        });
 
         alertText = "Job Updated Successfully!";
       }

@@ -18,7 +18,7 @@ export default class UserService {
     });
   };
 
-  static update = ({ name, lastName, email, location }, token) => {
+  static update = ({ name, lastName, email, location }) => {
     return axios.patch(
       `${userUrl}/updateUser`,
       {
@@ -27,7 +27,6 @@ export default class UserService {
         email,
         location,
       },
-      { headers: { Authorization: `Bearer ${token}` } }
     );
   };
 }
