@@ -30,7 +30,7 @@ const register = async (req, res) => {
 
   attachCookieToken({ res, token });
 
-  res.status(StatusCodes.CREATED).json(returnUserData(user, token));
+  res.status(StatusCodes.CREATED).json(returnUserData(user));
 };
 
 const login = async (req, res) => {
@@ -53,7 +53,12 @@ const login = async (req, res) => {
 
   attachCookieToken({ res, token });
 
-  res.status(StatusCodes.OK).json(returnUserData(user, token));
+  res.status(StatusCodes.OK).json(returnUserData(user));
+};
+
+const logout = (req, res) => {
+  res.cookie("token", "", { expires: new Date(Date.now()) });
+  res.status(StatusCodes.OK).json({ msg: "User logged out." });
 };
 
 const updateUser = async (req, res) => {
@@ -71,10 +76,12 @@ const updateUser = async (req, res) => {
   await user.save();
 
   const token = user.createJWT();
-  res.status(StatusCodes.OK).json(returnUserData(user, token));
+
+  attachCookieToken({ res, token });
+  res.status(StatusCodes.OK).json(returnUserData(user));
 };
 
-const returnUserData = (user, token) => {
+const returnUserData = (user) => {
   return {
     user: {
       name: user.name,
@@ -82,9 +89,14 @@ const returnUserData = (user, token) => {
       email: user.email,
       location: user.location,
     },
-    token,
     userLocation: user.location,
   };
 };
 
-export { register, login, updateUser };
+const getCurrentUser = async (req, res) => {
+  const userId = req.user.userId;
+  const user = await User.findById(userId);
+  res.status(StatusCodes.OK).json(returnUserData(user));
+};
+
+export { register, login, updateUser, getCurrentUser, logout };

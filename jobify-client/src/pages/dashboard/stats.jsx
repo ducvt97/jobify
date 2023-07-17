@@ -14,8 +14,8 @@ const StatsPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setLoading(true));
     const fetchStats = async () => {
+      dispatch(setLoading(true));
       try {
         const res = await JobService.showStats();
         const { stats: resStats, monthlyApplications: resMonthlyApplications } =

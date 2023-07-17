@@ -35,8 +35,12 @@ const userSlice = createSlice({
       state.userLocation = action.payload.userLocation;
       // addUserToLocalStorage(state);
     },
+    setCurrentUser: (state, action) => {
+      state.user = action.payload.user;
+      state.userLocation = action.payload.userLocation;
+    },
   },
 });
 
-export const { login, logout, updateUser } = userSlice.actions;
+export const { login, logout, updateUser, setCurrentUser } = userSlice.actions;
 export default userSlice.reducer;

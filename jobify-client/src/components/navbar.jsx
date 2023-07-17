@@ -4,8 +4,9 @@ import { FaAlignLeft, FaUserCircle, FaChevronDown } from "react-icons/fa";
 import Wrapper from "../assets/wrappers/Navbar";
 import Logo from "./logo";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../store/commonReducer";
+import { setLoading, toggleSidebar } from "../store/commonReducer";
 import { logout } from "../store/userReducer";
+import UserService from "../services/user";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -42,7 +43,17 @@ const Navbar = () => {
               <button
                 type="button"
                 className="dropdown-btn"
-                onClick={() => dispatch(logout())}
+                onClick={async () => {
+                  try {
+                    dispatch(setLoading(true));
+                    await UserService.logout();
+                    dispatch(logout());
+                  } catch (error) {
+                    console.log(error);
+                  } finally {
+                    dispatch(setLoading(false));
+                  }
+                }}
               >
                 Logout
               </button>

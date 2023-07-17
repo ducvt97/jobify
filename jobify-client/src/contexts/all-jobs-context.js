@@ -3,6 +3,7 @@ import { createContext, useReducer } from "react";
 import JobService from "../services/job";
 import { useDispatch, useSelector } from "react-redux";
 import { displayAlert, setLoading } from "../store/commonReducer";
+import { logout } from "../store/userReducer";
 
 const initialState = {
   jobs: [],
@@ -76,11 +77,12 @@ const AllJobsProvider = (props) => {
         },
       });
     } catch (error) {
-      dispatchStore(setLoading(true));
-      displayAlert({
-        alertType: "danger",
-        alertText: error.response.data.msg,
-      });
+      dispatchStore(
+        displayAlert({
+          alertType: "danger",
+          alertText: error.response.data.msg,
+        })
+      );
     } finally {
       dispatchStore(setLoading(false));
     }

@@ -29,7 +29,7 @@ const Register = () => {
         navigate("/");
       }, 1500);
     }
-  }, [user, navigate, dispatch]);
+  }, [user]);
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -63,6 +63,7 @@ const Register = () => {
             alertText: "Login successfully. Redirecting...",
           })
         );
+
         dispatch(login({ user, userLocation }));
       } else {
         const res = await UserService.register({ name, email, password });
