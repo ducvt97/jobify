@@ -88,6 +88,7 @@ const returnUserData = (user) => {
       lastName: user.lastName,
       email: user.email,
       location: user.location,
+      role: user.role,
     },
     userLocation: user.location,
   };

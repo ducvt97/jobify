@@ -2,19 +2,6 @@ import axios from "axios";
 
 const userUrl = "/jobs";
 
-// axios.interceptors.response.use(
-//   function(response) {
-//     return response;
-//   },
-//   function(error) {
-//      if (error.status.code === 401 ) {
-//       store.dispatch(actions.logout());
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
-
 export default class JobService {
   static jobsAPI = axios.create({
     baseURL: "http://localhost:5000/api/v1",

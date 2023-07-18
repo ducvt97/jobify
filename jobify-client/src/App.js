@@ -16,6 +16,7 @@ import {
   StatsPage,
   SharedLayout,
   ProtectedRoute,
+  AdminPage,
 } from "./pages/dashboard";
 
 const router = createBrowserRouter([
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       { path: "all-jobs", element: <AllJobsPage /> },
       { path: "add-job", element: <AddJobPage /> },
       { path: "profile", element: <ProfilePage /> },
+      { path: "admin", element: <AdminPage /> },
     ],
   },
   { path: "/register", element: <RegisterPage /> },
